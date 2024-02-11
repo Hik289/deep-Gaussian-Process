@@ -1,0 +1,282 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+higdon <- function(x) {
+  i <- which(x <= 0.6)
+  x[i] <- 2 * sin(pi * 0.8 * x[i] * 4) + 0.4 * cos(pi * 0.8 * x[i] * 16)
+  x[-i] <- 2 * x[-i] - 1
+  return(x)
+}
+
+
+```
+
+
+```{r}
+n<-27
+```
+
+```{r}
+x <- seq(0, 1, length = n)
+y <- higdon(x)
+np <- 100
+xp <- seq(0, 1, length = np)
+yp <- higdon(xp)
+plot(xp, yp, type = "l", col = 4, xlab = "X", ylab = "Y", main = "4-rank Hermite polinomial and line function")
+points(x, y)
+
+```
+
+
+```{r}
+higdon(x)
+```
+
+
+
+```{r}
+
+
+```
+
+
+
+
+```{r}
+library(DGP)
+```
+
+```{r}
+x <- read.csv('./data/x_1.csv')
+x <- unlist(x, use.name = FALSE)
+y <- read.csv('./data/y_1.csv')
+y <- unlist(y, use.name = FALSE)
+```
+
+
+
+
+```{r}
+fit1 <- fit_one_layer(x, y, nmcmc = 10000, verb = FALSE)
+plot(fit1)
+```
+```{r}
+fit1 <- predict(fit1, x, lite = FALSE)
+plot(fit1)
+```
+
+```{r}
+fit2 <- fit_three_layer(year, speed, nmcmc = 10000, verb = FALSE)
+fit2 <- predict(fit2, year, lite = FALSE)
+
+plot(fit2,main = "MCMC method three-layer-GP for marathon data")
+
+```
+
+
+```{r}
+fit2 <- fit_three_layer(year, speed, nmcmc = 10000, verb = FALSE)
+fit2 <- predict(fit2, year, lite = FALSE)
+
+plot(fit2,main = "MCMC method three-layer-GP for marathon data")
+
+```
+
+
+ˆ
+```{r}
+fit2 <- continue(fit2, 2000, verb = FALSE)
+plot(fit2, trace = FALSE, hidden = TRUE) 
+```
+
+```{r}
+
+x <- read.csv('./data/x_1.csv')
+year <- unlist(x, use.name = FALSE)
+y <- read.csv('./data/y_1.csv')
+speed <- unlist(y, use.name = FALSE)
+```
+
+```{r}
+
+fit2 <- fit_three_layer(x, y, nmcmc = 10000, verb = FALSE)
+fit2 <- predict(fit2, x, lite = FALSE)
+
+plot(fit2,main = "MCMC method three-layer-GP for polynomial and line data")
+
+```
+```{r}
+fit2 <- fit_two_layer(x, y, nmcmc = 10000, verb = FALSE)
+fit2 <- predict(fit2, x, lite = FALSE)
+
+plot(fit2,main = "MCMC method two-layer-GP for polynomial and line data")
+```
+
+
+
+```{r}
+fit3 <- fit_three_layer(x, y, nmcmc = 10000, verb = FALSE)
+fit3 <- trim(fit3, 5000, 2)
+fit3 <- predict(fit3, x, lite = FALSE)
+plot(fit3)
+```
+
+```{r}
+metrics <- data.frame("RMSE" = c(rmse(yp, fit1$mean), 
+                                 rmse(yp, fit2$mean),
+                                 rmse(yp, fit3$mean)),
+                      "CRPS" = c(crps(yp, fit1$mean, diag(fit1$Sigma)),
+                                 crps(yp, fit2$mean, diag(fit2$Sigma)),
+                                 crps(yp, fit3$mean, diag(fit3$Sigma))),
+                      "SCORE" = c(score(yp, fit1$mean, fit1$Sigma),
+                                  score(yp, fit2$mean, fit2$Sigma),
+                                  score(yp, fit3$mean, fit3$Sigma)))
+rownames(metrics) <- c("One-layer GP", "Two-layer DGP", "Three-layer DGP")
+metrics
+```
+
+```{r}
+```
+
+
+```{r}
+fit2_no_g <- fit_two_layer(x, y, nmcmc = 10000, true_g = 1e-4)
+fit2_no_g <- trim(fit2_no_g, 5000, 2)
+fit2_no_g <- predict(fit2_no_g, xp, lite = FALSE)
+plot(fit2_no_g)
+```
+
+```{r}
+fit2 <- predict(fit2, xp, EI = TRUE)
+plot(fit2)
+par(new = TRUE)
+plot(xp, fit2$EI, type = "l", lwd = 2, col = 3, axes = FALSE, xlab = "", ylab = "")
+points(xp[which.max(fit2$EI)], max(fit2$EI), pch = 17, cex = 1.5, col = 3)
+```
+
+
+```{r}
+f <- function(x) as.numeric(x > 0.5)
+
+# Training data
+x <- seq(0, 1, length = 27) 
+y <- f(x)
+
+# Testing data
+xp <- seq(0, 1, length = 100)
+yp <- f(xp)
+
+
+plot(xp, yp, type = "l", col = 4, xlab = "X", ylab = "Y", main = "Sgn(x) function")
+points(x, y)
+```
+
+```{r}
+fit1 <- fit_one_layer(x, y, nmcmc = 10000, cov = "exp2", verb = FALSE)
+
+fit1 <- predict(fit1, xp)
+plot(fit1,main = 'traditional GPR for sgn(x)')
+```
+
+```{r}
+fit2 <- fit_two_layer(x, y, nmcmc = 10000, verb = FALSE)
+
+fit2 <- predict(fit2, xp)
+plot(fit2,main = 'MCMC method two-layer-GP for sgn(x)')
+```
+```{r}
+fit2 <- fit_three_layer(x, y, nmcmc = 12000, verb = FALSE)
+
+fit2 <- predict(fit2, xp)
+plot(fit2,main = 'MCMC method three-layer-GP for sgn(x)')
+```
+
+```{r}
+fit2 <- fit_one_layer(x, y, nmcmc = 5, verb = FALSE)
+
+fit2 <- predict(fit2, x,lite = FALSE)
+plot(fit2,main = 'traditional GP for polymonial and line')
+```
+
+
+
+
+
+
+
+
+```{r}
+imse1 <- IMSE(fit1, xp)
+imse2 <- IMSE(fit2, xp)
+par(mfrow = c(1, 2))
+plot(xp, imse1$value, type = "l", ylab = "IMSE", main = "One-layer")
+points(xp[which.min(imse1$value)], min(imse1$value), pch = 17, cex = 1.5, col = 4)
+plot(xp, imse2$value, type = "l", ylab = "IMSE", main = "Two-layer")
+points(xp[which.min(imse2$value)], min(imse2$value), pch = 17, cex = 1.5, col = 4)
+```
+```{r}
+alc1 <- ALC(fit1, xp)
+alc2 <- ALC(fit2, xp)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

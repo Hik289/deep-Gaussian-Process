@@ -1,0 +1,164 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+higdon <- function(x) {
+  i <- which(x <= 0.6)
+  x[i] <- 2 * sin(pi * 0.8 * x[i] * 4) + 0.4 * cos(pi * 0.8 * x[i] * 16)
+  x[-i] <- 2 * x[-i] - 1
+  return(x)
+}
+
+
+```
+```{r}
+n<-27
+```
+
+```{r}
+x <- seq(0, 1, length = n)
+y <- higdon(x)
+np <- 100
+xp <- seq(0, 1, length = np)
+yp <- higdon(xp)
+plot(xp, yp, type = "l", col = 4, xlab = "X", ylab = "Y", main = "Higdon function")
+points(x, y)
+
+```
+
+```{r}
+higdon(x)
+```
+```{r}
+library(DGP)
+```
+
+`
+```{r}
+fit1 <- predict(fit1, xp, lite = FALSE)
+plot(fit1)
+```
+
+
+
+
+
+
+
+```{r}
+fit3 <- fit_three_layer(x, y, nmcmc = 10000, verb = FALSE)
+fit3 <- trim(fit3, 5000, 2)
+fit3 <- predict(fit3, xp, lite = FALSE)
+plot(fit3)
+```
+
+
+```{r}
+```
+
+
+```{r}
+fit2_no_g <- fit_two_layer(x, y, nmcmc = 10000, true_g = 1e-4)
+fit2_no_g <- trim(fit2_no_g, 5000, 2)
+fit2_no_g <- predict(fit2_no_g, xp, lite = FALSE)
+plot(fit2_no_g)
+```
+
+```{r}
+fit2 <- predict(fit2, xp, EI = TRUE)
+plot(fit2)
+par(new = TRUE)
+plot(xp, fit2$EI, type = "l", lwd = 2, col = 3, axes = FALSE, xlab = "", ylab = "")
+points(xp[which.max(fit2$EI)], max(fit2$EI), pch = 17, cex = 1.5, col = 3)
+```
+
+
+```{r}
+f <- function(x) as.numeric(x > 0.5)
+
+# Training data
+x <- seq(0, 1, length = 8) 
+y <- f(x)
+
+# Testing data
+xp <- seq(0, 1, length = 100)
+yp <- f(xp)
+
+plot(xp, yp, type = "l", col = 4, xlab = "X", ylab = "Y", main = "Step function")
+points(x, y)
+```
+
+```{r}
+fit1 <- fit_one_layer(x, y, nmcmc = 10000, cov = "exp2", true_g = 1e-4, verb = FALSE)
+fit1 <- trim(fit1, 5000, 5)
+fit1 <- predict(fit1, xp)
+plot(fit1)
+```
+
+```{r}
+fit2 <- fit_two_layer(x, y, nmcmc = 10000, cov = "exp2", true_g = 1e-4, verb = FALSE)
+fit2 <- trim(fit2, 5000, 5)
+fit2 <- predict(fit2, xp)
+plot(fit2)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
