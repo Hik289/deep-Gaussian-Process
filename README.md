@@ -12,46 +12,51 @@
   <img src="assets/readme-figure.png" alt="Deep Gaussian Process Experiments overview" width="100%">
 </p>
 
-**Figure 1.** The overview figure summarizes the experimental path from kernels and random features to deep GP layers, posterior uncertainty, and evaluation plots.
+## Abstract
 
-## Scope
+This repository is a conference-style artifact for deep Gaussian processes and random-feature approximations. It packages the code and notes needed to inspect the central research question: How can deep GP uncertainty be explored with scalable random-feature implementations? The emphasis is on transparent entry points, reproducible execution, and clear separation between code, local data, and generated outputs.
 
-This repository is organized as a conference-style research artifact for random-feature approximations and uncertainty-aware notebooks. This repository brings together notebooks and Python modules for exploring deep Gaussian processes, random feature approximations, and uncertainty-aware prediction. It is structured as a research workspace rather than a single packaged library.
+## Artifact at a Glance
 
-The README is structured for fast inspection by reviewers and future collaborators: it states the artifact scope, the main entry points, the reproduction path, and the outputs that should be checked after a run.
+| Item | Details |
+| --- | --- |
+| Research question | How can deep GP uncertainty be explored with scalable random-feature implementations? |
+| Primary artifact | Deep GP notebooks and random-feature code folders. |
+| Main entry points | `example_simple.ipynb`, `example.ipynb`, `deep_gp_random_features/` |
+| Expected outputs | Posterior curves, uncertainty bands, and approximation diagnostics. |
 
-## Artifact Contents
+## Repository Structure
 
-| Component | Role |
+| Item | Details |
 | --- | --- |
 | `deep_gp_random_features/` | random-feature code for scalable deep GP experiments. |
 | `deep GP code/` | earlier deep GP implementation notes and scripts. |
 | `PyDeepGP/` | included implementation reference used by the experiments. |
 | `example.ipynb`, `example_simple.ipynb`, `GP.ipynb` | notebook entry points for reproducing core examples. |
 
-## Reproduction Guide
+## Reproducibility Protocol
 
 1. `git clone git@github.com:Hik289/deep-Gaussian-Process.git`
 2. `python -m venv .venv && source .venv/bin/activate`
 3. `python -m pip install -U pip jupyter numpy scipy matplotlib scikit-learn`
 4. Open `example_simple.ipynb` first, then move to the deeper experiments once the base environment runs.
+5. Record the data window, random seed, software versions, machine type, and exact command used for any full rerun.
+6. Store regenerated figures, tables, checkpoints, or reports under the existing result folders instead of overwriting raw inputs.
 
-For a full rerun, record the data window, random seed, software versions, machine type, and command used for each experiment. Keep raw datasets outside Git unless they are small public fixtures.
+## Evaluation Protocol
 
-## Experimental Workflow
-
-| Stage | What to Check |
+| Step | Reviewer-facing check |
 | --- | --- |
-| Setup | Confirm local data paths, environment packages, and any MATLAB or notebook paths before running experiments. |
-| Run | Execute the smallest script or notebook first, then scale to the full experiment once outputs match expectations. |
-| Inspect | Compare generated figures, logs, tables, and saved result folders against the intended analysis. |
-| Extend | Add new experiments as separate scripts or notebooks with explicit names instead of overwriting existing artifacts. |
+| Environment | Confirm the listed runtime or notebook environment starts without modifying tracked files. |
+| Minimal run | Execute the smallest entry point before launching longer experiments. |
+| Output check | Compare regenerated files with the expected figures, tables, logs, or reports named in this README. |
+| Extension check | Add new runs as separate scripts, notebooks, or result folders with explicit names. |
 
-## Expected Outputs
+## Expected Results
 
-- Recreated figures, tables, notebooks, reports, or saved result files from the listed entry points.
-- A clear mapping from each experiment command to its generated output location.
-- Updated notes when a script depends on local data, private paths, or external software.
+- The main scripts or notebooks should regenerate the project-specific artifacts listed in **Artifact at a Glance**.
+- Outputs should be traceable to a command, parameter setting, and data window.
+- Any private data path or machine-specific setting should be documented before sharing the artifact externally.
 
 ## Paper or Reference
 
@@ -59,7 +64,7 @@ No external paper link is currently attached to this project. For now, the code,
 
 ## Citation
 
-If this repository supports academic work, cite the linked paper when available. Otherwise cite the repository version used in your experiment.
+If this repository supports a paper, cite the paper first and the artifact version second. If no paper is attached, cite the repository snapshot used in the experiment.
 
 ```bibtex
 @misc{deep_gaussian_process_artifact_2026,
@@ -67,7 +72,7 @@ If this repository supports academic work, cite the linked paper when available.
   author = {Hik289},
   year = {2026},
   howpublished = {\url{https://github.com/Hik289/deep-Gaussian-Process}},
-  note = {Research artifact}
+  note = {Conference-style research artifact}
 }
 ```
 
@@ -75,11 +80,11 @@ If this repository supports academic work, cite the linked paper when available.
 
 No explicit license file is included yet. Add one before public reuse, redistribution, or package release.
 
-## Reviewer Notes
+## Reviewer Checklist
 
-| Item | Status |
+| Claim | How to inspect it |
 | --- | --- |
-| Code | Included in this repository. |
-| Data | Expected to be configured locally unless a small fixture is committed. |
-| Environment | Base dependencies are listed in the reproduction guide; pin a lockfile for archival release. |
-| Results | Store generated artifacts under the existing result, report, log, or output folders. |
+| Code availability | Code and notebooks are present in the repository. |
+| Reproducibility | The protocol above gives the expected setup and run order. |
+| Result traceability | Generated outputs should live in named result, report, log, or output folders. |
+| Extensibility | New experiments should preserve existing artifacts and add clearly named outputs. |
